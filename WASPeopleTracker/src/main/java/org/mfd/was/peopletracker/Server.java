@@ -26,10 +26,8 @@ public class Server {
 	}
 
 	public void start() {
-		//TODO: start thread then start listening for requests
-		// spawn threads to handle multiple requests, don't block the server thread.
-		//use non blocking io to allow graceful stopping of server
-
+		//listen for connections on a new  thread and handle them on new threads 
+		//managed by an executor service.
 		new Thread(() -> {
 			while (!stopped) {
 				try {
@@ -45,18 +43,18 @@ public class Server {
 				}
 
 			}
-		}).start();
+		},"PeopleTrackerServer").start();//dont hardcode shit
 	}
 
 	public void stop() {
 		stopped = true;
 	}
 
-	public static Server getServer(int port) throws IOException {
+	public static Server getServer(int port,ClientHandler clientHandler) throws IOException {
 		if (INSTANCE != null)
 			return INSTANCE;
 
-		INSTANCE = new Server(port);
+		INSTANCE = new Server(port, clientHandler);
 		return INSTANCE;
 	}
 
