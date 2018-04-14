@@ -8,7 +8,7 @@ import java.util.ServiceLoader;
 public abstract class RouterScraperService {
 	private static ServiceLoader<RouterScraperService> loader = ServiceLoader.load(RouterScraperService.class);
 
-	abstract public List<Client> getConnectedClients();
+	abstract public List<Connection> getConnectedClients();
 
 	static public RouterScraperService getScraper() {
 		for (RouterScraperService rss : loader)

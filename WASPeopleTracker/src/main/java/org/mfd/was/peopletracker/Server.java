@@ -7,9 +7,8 @@ import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Server {
+public class Server implements Runnable, AutoCloseable {
 
-	private boolean stopped = false;
 	ServerSocket server;
 	private static Server INSTANCE;
 	ExecutorService executorService;
@@ -25,36 +24,47 @@ public class Server {
 		executorService = Executors.newCachedThreadPool();
 	}
 
-	public void start() {
-		//listen for connections on a new  thread and handle them on new threads 
+	@Override
+	synchronized public void run() {
+		//listen for connections and handle them on new threads 
 		//managed by an executor service.
-		new Thread(() -> {
-			while (!stopped) {
-				try {
-					Socket sock = server.accept();
 
-					//handle the client on another thread
-					executorService.execute(() -> clientHandler.handleClient(sock));
+		while (!Thread.interrupted()) {
+			try {
+				Socket sock = server.accept();
 
-				} catch (SocketTimeoutException to) {
-					//do nothing
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				//handle the client on another thread
+				executorService.execute(() -> clientHandler.handleClient(sock));
 
+			} catch (SocketTimeoutException to) {
+				//do nothing
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		},"PeopleTrackerServer").start();//dont hardcode shit
+
+		}
+
 	}
 
-	public void stop() {
-		stopped = true;
+	@Override
+	synchronized public void close() {
+		if (INSTANCE == null) // make it idempotent
+			return;
+		executorService.shutdown();
+		try {
+			server.close();
+		} catch (IOException e) {
+			// this exception shouldnt occur cause the run() and dispose() are synced and hence no socket exception should occur
+			e.printStackTrace();
+		}
+		INSTANCE = null;
+
 	}
 
-	public static Server getServer(int port,ClientHandler clientHandler) throws IOException {
-		if (INSTANCE != null)
-			return INSTANCE;
+	public static Server getServer(int port, ClientHandler clientHandler) throws IOException {
+		if (INSTANCE == null)
+			INSTANCE = new Server(port, clientHandler);
 
-		INSTANCE = new Server(port, clientHandler);
 		return INSTANCE;
 	}
 
