@@ -27,7 +27,7 @@ public class RouterScraper implements ConnectedClientsQueryable, Runnable, AutoC
 			/*
 			 * business logic:
 			 * scrape the router every DELAY seconds
-			 * increment the timed connections as required
+			 * update
 			 * 
 			 */
 
