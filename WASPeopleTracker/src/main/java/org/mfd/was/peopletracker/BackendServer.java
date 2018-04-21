@@ -7,17 +7,17 @@ import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Server implements Runnable, AutoCloseable {
+public class BackendServer implements Runnable, Closeable {
 
 	ServerSocket server;
-	private static Server INSTANCE;
+	private static BackendServer INSTANCE;
 	ExecutorService executorService;
 	ClientHandler clientHandler;
 
-	private Server() {
+	private BackendServer() {
 	}
 
-	private Server(int port, ClientHandler clientHandler) throws IOException {
+	private BackendServer(int port, ClientHandler clientHandler) throws IOException {
 		server = new ServerSocket(port);
 		server.setSoTimeout(500);
 		this.clientHandler = clientHandler;
@@ -61,9 +61,9 @@ public class Server implements Runnable, AutoCloseable {
 
 	}
 
-	public static Server getServer(int port, ClientHandler clientHandler) throws IOException {
+	public static BackendServer createServer(int port, ClientHandler clientHandler) throws IOException {
 		if (INSTANCE == null)
-			INSTANCE = new Server(port, clientHandler);
+			INSTANCE = new BackendServer(port, clientHandler);
 
 		return INSTANCE;
 	}
