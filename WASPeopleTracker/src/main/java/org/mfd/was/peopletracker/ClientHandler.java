@@ -1,9 +1,10 @@
 package org.mfd.was.peopletracker;
 
-import java.net.Socket;
-
+/**
+ * Defines whats to be done when a client connects. Later extend this to include
+ * things to do when a client disconnects.
+ */
 public interface ClientHandler {
-	
-	void handleClient(Socket socket);
+	void handle(Client client);
 
 }

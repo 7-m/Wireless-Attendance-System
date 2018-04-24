@@ -1,5 +1,8 @@
 package org.mfd.was.peopletracker;
 
+import java.sql.Date;
+import java.time.Instant;
+
 import org.mfd.was.core.Communicator;
 
 public class Client {
@@ -11,6 +14,12 @@ public class Client {
 		this.mac = mac;
 		this.communicator = comm;
 		this.timeAdded = timeAdded;
+	}
+
+	@Override
+	public String toString() {
+
+		return "[ " + mac + " , " + Date.from(Instant.ofEpochMilli(timeAdded)) +" ]";
 	}
 
 }

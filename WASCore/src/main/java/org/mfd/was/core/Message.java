@@ -11,7 +11,7 @@ public class Message implements Serializable {
 	private static final long serialVersionUID = 6316350315218172934L;
 
 	public enum MessageType {
-		PING, PONG, ATTENDANCE_START, RETRIEVE_MAC, ATTENDANCE_RESULT
+		PING, PONG, ATTENDANCE_START, RETRIEVE_MAC, ATTENDANCE_GET
 	}
 
 	public enum ExtraType {

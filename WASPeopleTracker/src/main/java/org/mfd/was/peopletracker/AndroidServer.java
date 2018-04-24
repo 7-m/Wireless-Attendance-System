@@ -7,6 +7,9 @@ import java.net.SocketTimeoutException;
 import java.util.Vector;
 
 import org.mfd.was.core.Communicator;
+import org.mfd.was.core.Message;
+import org.mfd.was.core.Message.ExtraType;
+import org.mfd.was.core.Message.MessageType;
 
 /**
  * 
@@ -15,28 +18,37 @@ import org.mfd.was.core.Communicator;
 
 public class AndroidServer implements Runnable, Closeable {
 
-	Vector<Client> clients;
+	private static final String TAG = "AndroidServer";
 	ServerSocket server;
+	ClientHandler clientHandler;
 
-	static private String retrieveMacAddress(Socket sock) {
-		//TODO:send a message to fetch the mac address and assign it
-		return null;
+	static private String retrieveMacAddress(Communicator comm) throws ClassNotFoundException, IOException {
+		Message macMessage = new Message(MessageType.RETRIEVE_MAC);
+
+		Message reply = comm.sendAndRecieveMessage(macMessage);
+		return (String) reply.getExtra(ExtraType.MAC);
 	}
 
-	public AndroidServer(int port, Vector<Client> clients) throws IOException {
+	public AndroidServer(int port, Vector<Client> clients, ClientHandler clientHandler) throws IOException {
 		server = new ServerSocket(port);
 		server.setSoTimeout(500);
-		this.clients = clients;
+		this.clientHandler = clientHandler;
 	}
 
-	private void addClient(Socket sock) {
+	private void makeClient(Socket sock) {
 
-		String mac = retrieveMacAddress(sock);
-		try {
-			clients.add(new Client(mac, new Communicator(sock), System.currentTimeMillis()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		//, run it on a different thread or it might cause issues
+		new Thread(() -> {
+			try {
+				Communicator comm = new Communicator(sock);
+				Client client = new Client(retrieveMacAddress(comm), comm, System.currentTimeMillis());
+				Utils.Log(TAG, "Created client "+client);
+
+				clientHandler.handle(client);
+			} catch (IOException | ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}, "AddClientThread").start();
 
 	}
 
@@ -60,8 +72,8 @@ public class AndroidServer implements Runnable, Closeable {
 			try {
 				Socket sock = server.accept();
 
-				//add the client to connected clients list				
-				addClient(sock);
+				//construct the client and handle it			
+				makeClient(sock);
 
 			} catch (SocketTimeoutException to) {
 				//do nothing

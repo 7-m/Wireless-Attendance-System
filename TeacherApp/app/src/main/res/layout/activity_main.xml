@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="org.mfd.teacherapp.MainActivity">
+
+    <Button
+        android:id="@+id/get_mac"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Get Mac"
+        android:layout_below="@+id/macDisplay"
+        android:layout_toEndOf="@+id/start_attendance"
+        android:layout_marginStart="29dp"
+        android:layout_marginTop="19dp"
+        android:onClick="getMac"
+        />
+
+
+
+    <Button
+        android:id="@+id/start_attendance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Start Taking Attendance"
+        android:layout_below="@+id/get_mac"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="48dp"
+        android:onClick="sendAttendanceMessage"/>
+
+    <TextView
+        android:id="@+id/macDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+</RelativeLayout>
