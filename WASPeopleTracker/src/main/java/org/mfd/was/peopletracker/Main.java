@@ -18,11 +18,12 @@ public class Main {
 			@Override
 			public Type identify(Client client) {
 				String mac_mufaddal = "e4:46:da:18:4e:bb";
-				String mac_mom="ac:c3:3a:87:31:99";
+				String mac_manish="34:e9:11:bd:39:a3";
+				String mac_madhu="e4:46:da:85:2a:b5";
 				if (client.mac.equalsIgnoreCase(mac_mufaddal))
-					return Type.STUDENT;
-				if (client.mac.equalsIgnoreCase(mac_mom))
 					return Type.TEACHER;
+				if (client.mac.equalsIgnoreCase(mac_manish) || client.mac.equalsIgnoreCase(mac_madhu))
+					return Type.STUDENT;
 				
 				throw new AssertionError();
 			}

@@ -17,8 +17,9 @@ import static android.content.ContentValues.TAG;
 public class MainActivity extends Activity {
 	private static final String HOST = "192.168.0.199";
 	private static final int PORT = 52000;
-	private static final String TAG="WASMainActivity";
+	private static final String TAG = "WASMainActivity";
 	Communicator comm;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,10 +52,10 @@ public class MainActivity extends Activity {
 					try {
 						comm = new Communicator(sock);
 						comm.readMessage(); //server will ask for mac and thats the only reuquest itll send
-						Message reply=new Message(Message.MessageType.RETRIEVE_MAC);
+						Message reply = new Message(Message.MessageType.RETRIEVE_MAC);
 						reply.putExtra(Message.ExtraType.MAC, Utils.retrieveWlanMac());
 						comm.sendMessage(reply);
-					} catch (IOException |ClassNotFoundException e) {
+					} catch (IOException | ClassNotFoundException e) {
 						throw new RuntimeException("Successfully connected to server but couldnt create Communicator");
 					}
 				}
@@ -63,17 +64,24 @@ public class MainActivity extends Activity {
 		makeConnectionThread.start();
 	}
 
-	public  void getMac(View v){
-		TextView tv=findViewById(R.id.macDisplay);
+	public void getMac(View v) {
+		TextView tv = findViewById(R.id.macDisplay);
 		tv.setText(Utils.retrieveWlanMac());
 	}
-	public void sendAttendanceMessage(View v){
-		Message m=new Message(Message.MessageType.ATTENDANCE_START);
-		try {
-			comm.sendMessage(m);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+	public void sendAttendanceMessage(View v) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Message m = new Message(Message.MessageType.ATTENDANCE_START);
+				try {
+					comm.sendMessage(m);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}0
+
+			}
+		}).start();
 
 	}
 }
