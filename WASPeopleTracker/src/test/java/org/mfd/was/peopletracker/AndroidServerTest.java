@@ -3,6 +3,7 @@ package org.mfd.was.peopletracker;
 import java.io.IOException;
 import java.util.Vector;
 
+/*
 public class AndroidServerTest {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
@@ -20,3 +21,4 @@ public class AndroidServerTest {
 	}
 
 }
+*/

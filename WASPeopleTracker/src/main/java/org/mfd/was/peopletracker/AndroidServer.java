@@ -16,7 +16,7 @@ import org.mfd.was.core.Message.MessageType;
  * 
  */
 
-public class AndroidServer implements Runnable, Closeable {
+public class AndroidServer implements Runnable {
 
 	private static final String TAG = "AndroidServer";
 	ServerSocket server;
@@ -35,14 +35,14 @@ public class AndroidServer implements Runnable, Closeable {
 		this.clientHandler = clientHandler;
 	}
 
-	private void makeClient(Socket sock) {
+	private void handleClientConnection(Socket sock) {
 
-		//, run it on a different thread or it might cause issues
+		// handle it on a different thread or it might cause issues
 		new Thread(() -> {
 			try {
 				Communicator comm = new Communicator(sock);
 				Client client = new Client(retrieveMacAddress(comm), comm, System.currentTimeMillis());
-				Utils.Log(TAG, "Created client "+client);
+				Utils.log(TAG, "Created client "+client);
 
 				clientHandler.handle(client);
 			} catch (IOException | ClassNotFoundException e) {
@@ -52,18 +52,7 @@ public class AndroidServer implements Runnable, Closeable {
 
 	}
 
-	@Override
-	synchronized public void close() {
 
-		try {
-			server.close();
-		} catch (IOException e) {
-			// this exception shouldnt occur cause the run() and close() are synced and hence no concurrent 
-			// blocking and closing of serversocket should occur
-			e.printStackTrace();
-		}
-
-	}
 
 	@Override
 	synchronized public void run() {
@@ -73,7 +62,7 @@ public class AndroidServer implements Runnable, Closeable {
 				Socket sock = server.accept();
 
 				//construct the client and handle it			
-				makeClient(sock);
+				handleClientConnection(sock);
 
 			} catch (SocketTimeoutException to) {
 				//do nothing

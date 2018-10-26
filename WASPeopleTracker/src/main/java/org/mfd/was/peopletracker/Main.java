@@ -17,8 +17,8 @@ public class Main {
 
 			@Override
 			public Type identify(Client client) {
-				String mac_mufaddal = "e4:46:da:18:4e:bb";
-				String mac_manish="34:e9:11:bd:39:a3";
+				String mac_mufaddal = "e0:62:67:19:62:35";
+				String mac_manish="74:23:44:3c:da:a7";
 				String mac_madhu="e4:46:da:85:2a:b5";
 				if (client.mac.equalsIgnoreCase(mac_mufaddal))
 					return Type.TEACHER;

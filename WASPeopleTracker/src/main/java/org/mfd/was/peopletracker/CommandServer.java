@@ -6,7 +6,7 @@ import org.mfd.was.core.Message;
 
 public class CommandServer implements Runnable {
 
-	private static final String TAG = "Command Server";
+	private static final String TAG = "CommandServer";
 	Client teacher;
 	Command command;
 
@@ -21,7 +21,7 @@ public class CommandServer implements Runnable {
 		while (!Thread.interrupted()) {
 			try {
 				Message m = teacher.communicator.readMessage();
-				Utils.Log(TAG, "Receieved message: " + m.getType() + " from " + teacher);
+				Utils.log(TAG, "Receieved message: " + m.getType() + " from " + teacher);
 				switch (m.getType()) {
 				case ATTENDANCE_START:
 					command.startAttendance();

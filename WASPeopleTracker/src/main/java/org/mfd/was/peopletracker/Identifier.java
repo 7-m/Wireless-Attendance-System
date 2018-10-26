@@ -1,11 +1,14 @@
 package org.mfd.was.peopletracker;
 
+/**
+ Isdentifies and categorizes  a client bases on mac.
+ */
 public interface Identifier {
-	//identifies and categorizes  a client bases on mac
+
+	Type identify(Client client);
+
 	enum Type {
 		STUDENT, TEACHER
 	}
-
-	Type identify(Client client);
 
 }
